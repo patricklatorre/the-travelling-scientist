@@ -2,15 +2,17 @@ package automaton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 class Node {
 	private String name;
+	private List<Path> paths;
+	private int distanceFromFinal;
 
-	private ArrayList<Path> paths; // <path, name>
-
-	public Node(String name) {
+	public Node(String name, int distanceFromFinal) {
 		this.name = name;
+		this.distanceFromFinal = distanceFromFinal;
 		paths = new ArrayList<>();
 	}
 
@@ -20,21 +22,21 @@ class Node {
 			paths.add(new Path(properties[i], properties[i + 1]));
 	}
 
-	public Node(String name, ArrayList<Path> paths) {
-		this.name = name;
-		this.paths = paths;
-	}
-
 	public Node(Node node) {
-		this.name = node.name();
-		this.paths = new ArrayList<>(node.paths());
+		name = node.name();
+		paths = new ArrayList<>(node.paths());
+		distanceFromFinal = node.dist();
 	}
 
 	public String name() {
 		return name;
 	}
 
-	public ArrayList<Path> paths() {
+	public int dist() {
+		return distanceFromFinal;
+	}
+
+	public List<Path> paths() {
 		return paths;
 	}
 
@@ -88,7 +90,6 @@ public class Reference {
 	public static HashMap<String, String> corres;
 	public static String START_STATE = "Q0";
 	public static String END_STATE = "Q10";
-
 
 	public static void init() {
 		map = new HashMap<>();
@@ -147,7 +148,7 @@ public class Reference {
 
 		// Q0
 		name = "Q0";
-		node = new Node(name);
+		node = new Node(name, 10);
 		node.point("<ES-C> Q20 " +
 				"<ES-SLC> Q1 " +
 				"<ES-L> Q21 " +
@@ -163,7 +164,7 @@ public class Reference {
 
 		// Q20
 		name = "Q20";
-		node = new Node(name);
+		node = new Node(name, 10);
 		node.point("<SE-C> Q0 " +
 				"<ES-SL> Q1 "
 		);
@@ -172,7 +173,7 @@ public class Reference {
 
 		// Q21
 		name = "Q21";
-		node = new Node(name);
+		node = new Node(name, 10);
 		node.point("<SE-L> Q0 " +
 				"<ES-G> Q46 " +
 				"<ES-SC> Q1 "
@@ -181,7 +182,7 @@ public class Reference {
 
 		// Q46
 		name = "Q46";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<SE-LG> Q0 " +
 				"<ES-L> Q25 " +
 				"<SE-G> Q21 "
@@ -190,7 +191,7 @@ public class Reference {
 
 		// Q25
 		name = "Q25";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<SE-G> Q0 " +
 				"<SE-L> Q46 " +
 				"<ES-HH> Q22 " +
@@ -200,7 +201,7 @@ public class Reference {
 
 		// Q22
 		name = "Q22";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<SE-G> Q23 " +
 				"<SE-HG> Q45 " +
 				"<SE-H> Q24 " +
@@ -212,7 +213,7 @@ public class Reference {
 
 		// Q23
 		name = "Q23";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<SE-HH> Q0 " +
 				"<ES-G> Q22 " +
 				"<SE-H> Q45 "
@@ -222,7 +223,7 @@ public class Reference {
 
 		// Q45
 		name = "Q45";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<ES-H> Q23 " +
 				"<ES-G> Q24 " +
 				"<SE-H> Q0 " +
@@ -233,17 +234,17 @@ public class Reference {
 
 		// q24
 		name = "Q24";
-		node = new Node(name);
+		node = new Node(name, 11);
 		node.point("<SE-G> Q45 " +
 				"<ES-H> Q22 " +
 				"<SE-H> Q25 " +
 				"<SE-HG> Q0 "
 		);
+		map.put(name, node);
 
-
-		// q1
+		// Q1
 		name = "Q1";
-		node = new Node(name);
+		node = new Node(name, 9);
 		node.point("<SE-SC> Q21 " +
 				"<SE-SLC> Q0 " +
 				"<SE-SL> Q20 " +
@@ -256,7 +257,7 @@ public class Reference {
 
 		// q11
 		name = "Q11";
-		node = new Node(name);
+		node = new Node(name, 10);
 		node.point("<MS-C> Q1 " +
 				"<SM-SL> Q12 "
 		);
@@ -265,7 +266,7 @@ public class Reference {
 
 		// Q12
 		name = "Q12";
-		node = new Node(name);
+		node = new Node(name, 9);
 		node.point("<MS-SLC> Q1 " +
 				"<MS-SL> Q11 " +
 				"<MS-C> Q19 " +
@@ -276,7 +277,7 @@ public class Reference {
 
 		// Q19
 		name = "Q19";
-		node = new Node(name);
+		node = new Node(name, 9);
 		node.point("<SM-C> Q12 " +
 				"<MS-S> Q2 "
 		);
@@ -285,7 +286,7 @@ public class Reference {
 
 		// Q2
 		name = "Q2";
-		node = new Node(name);
+		node = new Node(name, 8);
 		node.point("<SM-SC> Q12 " +
 				"<MS-L> Q1 " +
 				"<SM-S> Q19 " +
@@ -299,7 +300,7 @@ public class Reference {
 
 		// Q18
 		name = "Q18";
-		node = new Node(name);
+		node = new Node(name, 9);
 		node.point("<SE-H> Q2 " +
 				"<SE-SH> Q14 " +
 				"<SE-SCH> Q13 "
@@ -309,7 +310,7 @@ public class Reference {
 
 		// Q14
 		name = "Q14";
-		node = new Node(name);
+		node = new Node(name, 8);
 		node.point("<ES-SH> Q18 " +
 				"<ES-S> Q2 " +
 				"<ES-SG> Q3 " +
@@ -320,7 +321,7 @@ public class Reference {
 
 		// Q13
 		name = "Q13";
-		node = new Node(name);
+		node = new Node(name, 8);
 		node.point("<ES-SCH> Q18 " +
 				"<ES-C> Q14 " +
 				"<ES-SC> Q2 " +
@@ -331,7 +332,7 @@ public class Reference {
 
 		// Q3
 		name = "Q3";
-		node = new Node(name);
+		node = new Node(name, 7);
 		node.point("<SE-G> Q2 " +
 				"<SE-SG> Q14 " +
 				"<SE-SCG> Q13 " +
@@ -345,7 +346,7 @@ public class Reference {
 
 		// Q17
 		name = "Q17";
-		node = new Node(name);
+		node = new Node(name, 8);
 		node.point("<SM-G> Q15 " +
 				"<MS-SC> Q3 "
 		);
@@ -354,7 +355,7 @@ public class Reference {
 
 		// Q15
 		name = "Q15";
-		node = new Node(name);
+		node = new Node(name, 7);
 		node.point("<MS-G> Q17 " +
 				"<MS-SCG> Q3 " +
 				"<MS-SC> Q4 " +
@@ -365,7 +366,7 @@ public class Reference {
 
 		// Q16
 		name = "Q16";
-		node = new Node(name);
+		node = new Node(name, 7);
 		node.point("<SM-C> Q15 " +
 				"<MS-SG> Q3 " +
 				"<MS-S> Q4 "
@@ -375,7 +376,7 @@ public class Reference {
 
 		// Q4
 		name = "Q4";
-		node = new Node(name);
+		node = new Node(name, 6);
 		node.point("<MS-G> Q3 " +
 				"<SM-S> Q16 " +
 				"<SE-SC> Q5 " +
@@ -387,7 +388,7 @@ public class Reference {
 
 		// Q26
 		name = "Q26";
-		node = new Node(name);
+		node = new Node(name, 6);
 		node.point("<SE-S> Q4 " +
 				"<ES-SH> Q27 " +
 				"<SE-C> Q5 "
@@ -397,7 +398,7 @@ public class Reference {
 
 		// Q27
 		name = "Q27";
-		node = new Node(name);
+		node = new Node(name, 6);
 		node.point("<SE-SH> Q26 " +
 				"<SE-H> Q4 " +
 				"<ES-SCH> Q5 "
@@ -407,7 +408,7 @@ public class Reference {
 
 		// Q5
 		name = "Q5";
-		node = new Node(name);
+		node = new Node(name, 5);
 		node.point("<SE-SCH> Q27 " +
 				"<ES-C> Q26 " +
 				"<ES-SC> Q4 " +
@@ -420,7 +421,7 @@ public class Reference {
 
 		// Q28
 		name = "Q28";
-		node = new Node(name);
+		node = new Node(name, 5);
 		node.point("<SE-HH> Q5 " +
 				"<ES-S> Q6 " +
 				"<SE-H> Q29 "
@@ -430,7 +431,7 @@ public class Reference {
 
 		// Q29
 		name = "Q29";
-		node = new Node(name);
+		node = new Node(name, 5);
 		node.point("<ES-H> Q28 " +
 				"<SE-H> Q5 " +
 				"<ES-SH> Q6 "
@@ -440,7 +441,7 @@ public class Reference {
 
 		// Q6
 		name = "Q6";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<SE-SH> Q29 " +
 				"<SE-S> Q28 " +
 				"<SE-SHH> Q5 " +
@@ -453,7 +454,7 @@ public class Reference {
 
 		// Q30
 		name = "Q30";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<MS-S> Q6 " +
 				"<SM-HH> Q7 " +
 				"<SM-H> Q31 "
@@ -463,7 +464,7 @@ public class Reference {
 
 		// Q31
 		name = "Q31";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<MS-H> Q30 " +
 				"<MS-SH> Q6 " +
 				"<SM-H> Q7 "
@@ -473,7 +474,7 @@ public class Reference {
 
 		// Q7
 		name = "Q7";
-		node = new Node(name);
+		node = new Node(name, 3);
 		node.point("<MS-H> Q31 " +
 				"<MS-HH> Q30 " +
 				"<MS-SHH> Q6 " +
@@ -489,7 +490,7 @@ public class Reference {
 
 		// Q32
 		name = "Q32";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<SM-HHG> Q7 " +
 				"<SM-HH> Q35 "
 		);
@@ -498,7 +499,7 @@ public class Reference {
 
 		// Q35
 		name = "Q35";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<MS-HH> Q32 " +
 				"<SM-L> Q34 " +
 				"<SM-G> Q7 " +
@@ -509,7 +510,7 @@ public class Reference {
 
 		// Q34
 		name = "Q34";
-		node = new Node(name);
+		node = new Node(name, 4);
 		node.point("<MS-L> Q35 " +
 				"<SM-LG> Q7 " +
 				"<MS-S> Q36 " +
@@ -520,7 +521,7 @@ public class Reference {
 
 		// Q36
 		name = "Q36";
-		node = new Node(name);
+		node = new Node(name, 3);
 		node.point("<SM-SLG> Q7 " +
 				"<SM-SL> Q35 " +
 				"<SM-S> Q34 " +
@@ -532,7 +533,7 @@ public class Reference {
 
 		// Q33
 		name = "Q33";
-		node = new Node(name);
+		node = new Node(name, 3);
 		node.point("<SM-G> Q34 " +
 				"<MS-SG> Q36 " +
 				"<SM-L> Q7 " +
@@ -543,7 +544,7 @@ public class Reference {
 
 		// Q8
 		name = "Q8";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<SM-SL> Q7 " +
 				"<MS-G> Q36 " +
 				"<SM-S> Q33 " +
@@ -557,7 +558,7 @@ public class Reference {
 
 		// Q38
 		name = "Q38";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<ES-S> Q8 " +
 				"<ES-SC> Q9 " +
 				"<SE-L> Q37 "
@@ -567,7 +568,7 @@ public class Reference {
 
 		// Q37
 		name = "Q37";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<ES-L> Q38 " +
 				"<ES-SL> Q8 " +
 				"<ES-SLC> Q9 " +
@@ -580,7 +581,7 @@ public class Reference {
 
 		// Q42
 		name = "Q42";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<SE-S> Q37 " +
 				"<ES-L> Q8 " +
 				"<ES-LC> Q9 " +
@@ -591,7 +592,7 @@ public class Reference {
 
 		// Q39
 		name = "Q39";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<SE-C> Q37 " +
 				"<ES-SL> Q9 " +
 				"<SE-S> Q40 "
@@ -601,7 +602,7 @@ public class Reference {
 
 		// Q40
 		name = "Q40";
-		node = new Node(name);
+		node = new Node(name, 2);
 		node.point("<SE-C> Q42 " +
 				"<SE-SC> Q37 " +
 				"<ES-S> Q39 " +
@@ -612,7 +613,7 @@ public class Reference {
 
 		// Q9
 		name = "Q9";
-		node = new Node(name);
+		node = new Node(name, 1);
 		node.point("<SE-C> Q8 " +
 				"<SE-SC> Q38 " +
 				"<SE-SLC> Q37 " +
@@ -629,7 +630,7 @@ public class Reference {
 
 		// Q41
 		name = "Q41";
-		node = new Node(name);
+		node = new Node(name, 1);
 		node.point("<MS-S> Q9 " +
 				"<SM-L> Q44 " +
 				"<SM-LC> Q10 " +
@@ -640,7 +641,7 @@ public class Reference {
 
 		// Q44
 		name = "Q44";
-		node = new Node(name);
+		node = new Node(name, 1);
 		node.point("<MS-SL> Q9 " +
 				"<MS-L> Q41 " +
 				"<SM-C> Q10 "
@@ -650,7 +651,7 @@ public class Reference {
 
 		// Q43
 		name = "Q43";
-		node = new Node(name);
+		node = new Node(name, 1);
 		node.point("<MS-C> Q41 " +
 				"<MS-SC> Q9 " +
 				"<SM-L> Q10 "
@@ -660,7 +661,7 @@ public class Reference {
 
 		// Q10
 		name = "Q10";
-		node = new Node(name);
+		node = new Node(name, 0);
 		node.point("<MS-SLC> Q9 " +
 				"<MS-C> Q44 " +
 				"<MS-LC> Q41 " +
@@ -693,6 +694,28 @@ public class Reference {
 		return 0;
 	}
 
+	public static String smartChoice(String state) {
+		Node node = get(state);
+		List<Node> nextNodes = new ArrayList<>();
+		List<Integer> dists = new ArrayList<>();
+		int iMin = -1;
+
+		for (Path p : node.paths())
+			nextNodes.add(Reference.get(p.dest()));
+		for (Node n : nextNodes)
+			dists.add(n.dist());
+
+		for (int i = 0; i < dists.size(); i++) {
+			if (i == 0) {
+				iMin = 0;
+				continue;
+			}
+			if (dists.get(i) < dists.get(iMin))
+				iMin = i;
+		}
+		return node.paths().get(iMin).path();
+	}
+
 	public static String inString() {
 		String state;
 		String str = "";
@@ -711,20 +734,34 @@ class Driver {
 		Reference.init();
 		Scanner input = new Scanner(System.in);
 		String currentState = Reference.START_STATE;
-		String endState = Reference.END_STATE;
+		boolean stepAllFlag = false;
+		int turn = 1;
 
-		while (!currentState.equals(endState)) {
-			System.out.println("Currently : " + Reference.corres.get(currentState));
-			String in = input.next();
+		while (!currentState.equals(Reference.END_STATE)) {
+			System.out.println("\n" + Reference.corres.get(currentState));
+			System.out.print("Turn [" +turn+ "] :\t");
+			String in = "";
+
+			if (!stepAllFlag)
+				in = input.next();
+
+			if (in.equalsIgnoreCase("stepall"))
+				stepAllFlag = true;
+			if (in.equalsIgnoreCase("step") || stepAllFlag) {
+				in = Reference.smartChoice(currentState);
+				System.out.println(in);
+			}
+
 			in = Reference.get(currentState).follow(in);
 
 			if (in == null) {
 				System.out.println("You can't do that.\n");
 				continue;
 			}
-
 			currentState = in;
+			turn++;
 		}
+
 		System.out.println("You solved the game!");
 	}
 }
