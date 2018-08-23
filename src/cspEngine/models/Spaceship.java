@@ -1,4 +1,4 @@
-package models;
+package cspEngine.models;
 
 import java.util.ArrayList;
 
