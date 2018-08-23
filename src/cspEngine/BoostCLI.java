@@ -1,3 +1,5 @@
+package cspEngine;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -328,7 +330,7 @@ public class BoostCLI {
 		@Override
 		public String toString() {
 			String info = "";
-			info += "BoostCLI\n";
+			info += "cspEngine.BoostCLI\n";
 			info += "Version 0.6.3\n";
 			info += "by Patrick Latorre";
 			return info;

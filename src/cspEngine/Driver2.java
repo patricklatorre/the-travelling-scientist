@@ -1,4 +1,6 @@
-import models.*;
+package cspEngine;
+
+import cspEngine.models.*;
 
 
 /*
