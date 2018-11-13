@@ -1,11 +1,14 @@
 package graphEngine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class Driver {
 	public static void main(String[] args) {
 		Reference.init();
 		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.println(Reference.inString());
 		while (startMenu() == 0)
 			mainGame();
 
@@ -15,9 +18,12 @@ class Driver {
 		Scanner input = new Scanner(System.in);
 		String currentState = Reference.START_STATE;
 		boolean stepAllFlag = false;
+		String stepsTaken = "";
+		List<Node> nodesTaken = new ArrayList<>();
 		int turn = 1;
 
 		while (!currentState.equals(Reference.END_STATE)) {
+			nodesTaken.add(Reference.get(currentState).clone());
 			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			if (turn == 1)
 				help();
@@ -43,11 +49,12 @@ class Driver {
 				System.out.println(in);
 			}
 
+			stepsTaken += "\t" + in + "\n";
 			in = Reference.get(currentState).follow(in);
 
 			if (in == null) {
-				System.out.println("You can't do that.\n");
-				continue;
+				System.out.println("\n\nYou LOST at " +(turn-1)+ " turns!\n\n\n\n");
+				return false;
 			}
 			currentState = in;
 			turn++;
@@ -56,8 +63,21 @@ class Driver {
 
 		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		showState(currentState);
+		System.out.println("Steps taken: \n" + stepsTaken);
+		System.out.println("Nodes traversed: ");
+		printNodesTaken(nodesTaken);
 		System.out.println("\n\nYOU WON AT " +(turn-1)+ " TURNS!\n\n\n\n");
 		return true;
+	}
+
+	public static void printNodesTaken(List<Node> nodesTaken) {
+		String tabs = "";
+		for (int i = 0; i < nodesTaken.size(); i++) {
+			tabs += "\t";
+			System.out.println(tabs + "===== traversed to =====>\n");
+			System.out.println(nodesTaken.get(i).toTabbedString(tabs));
+		}
+		System.out.println("\n\n\n\n");
 	}
 
 	public static void showState(String currentState) {
@@ -183,7 +203,9 @@ class Driver {
 		help += "1\t HOW TO PLAY\n";
 		help += "\tEvery turn, you are asked where to get people and " +
 				"where \n\tto drop them off, and who are involved in the migration.\n\n" +
-				"\tInput format : \"<entity1> <entity2> ... <entityN> <source> <destination>\"";
+				"Input format : [entity1] [entity2] ... [entityN] [source] [destination]" +
+				"OR" +
+				"\tInput format : \"<[source][destination]-[entity1][entity2][entityN]>\"\n";
 		help += "\n\n\n";
 		help += "2\t BACKSTORY\n";
 		help += " The Earth is slowly dying and a scientist wants to help build a new life on Mars.\n " +

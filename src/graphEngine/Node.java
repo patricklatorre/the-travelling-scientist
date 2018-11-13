@@ -54,6 +54,14 @@ class Node {
 		return str;
 	}
 
+	public String toTabbedString(String tabs) {
+		String str = "";
+		str += tabs + name + ":\n";
+		for (Path p : paths)
+			str += tabs + "\t" + p.toString() + "\n";
+		return str;
+	}
+
 	@Override
 	public Node clone() {
 		return new Node(this);
